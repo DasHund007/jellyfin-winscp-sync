@@ -7,7 +7,7 @@ if /i "%confirm_shutdown%" neq "y" (
 
 echo Synchronizing Anime...
 "C:\Program Files (x86)\WinSCP\WinSCP.com" ^
-  /log="E:\Jellyfin\WinSCP.log" /ini=nul ^
+  /log="E:\Jellyfin\jellyfin-winscp-sync\WinSCP.log" /ini=nul ^
   /command ^
     "open sftp://[USERNAME]:[PASSWORD]@[DOMAIN]/ -hostkey=""ssh-ed25519 255 [HOSTKEY]""" ^
     "synchronize local -neweronly E:\Jellyfin\Anime ""/home9/[USERNAME]/media/Anime""" ^
@@ -15,7 +15,7 @@ echo Synchronizing Anime...
 
 echo Synchronizing TV Shows...
 "C:\Program Files (x86)\WinSCP\WinSCP.com" ^
-  /log="E:\Jellyfin\WinSCP.log" /ini=nul ^
+  /log="E:\Jellyfin\jellyfin-winscp-sync\WinSCP.log" /ini=nul ^
   /command ^
     "open sftp://[USERNAME]:[PASSWORD]@[DOMAIN]/ -hostkey=""ssh-ed25519 255 [HOSTKEY]""" ^
     "synchronize local -neweronly E:\Jellyfin\Shows ""/home9/[USERNAME]/media/Shows""" ^
@@ -23,7 +23,7 @@ echo Synchronizing TV Shows...
 
 echo Synchronizing Movies...
 "C:\Program Files (x86)\WinSCP\WinSCP.com" ^
-  /log="E:\Jellyfin\WinSCP.log" /ini=nul ^
+  /log="E:\Jellyfin\jellyfin-winscp-sync\WinSCP.log" /ini=nul ^
   /command ^
     "open sftp://[USERNAME]:[PASSWORD]@[DOMAIN]/ -hostkey=""ssh-ed25519 255 [HOSTKEY]""" ^
     "synchronize local -neweronly E:\Jellyfin\Movies /home9/[USERNAME]/media/Movies" ^
