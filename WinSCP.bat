@@ -14,7 +14,8 @@ set USERNAME=[USERNAME]
 set PASSWORD=[PASSWORD]
 set HOSTNAME=[HOSTNAME]
 set HOSTKEY="[HOSTKEY]"
-set MediaDir="/home9/thecat007/media"
+set MediaDir="/server/dashund007/media"
+set DefaultDrive="E"
 set LogPath=E:\Jellyfin\WinSCP.log
 
 :: Prompt the user for the drive letter
@@ -39,41 +40,65 @@ if /i "%confirm_shutdown%" neq "y" (
 :: Define SFTP command
 set SFTP_COMMAND=open sftp://%USERNAME%:%PASSWORD%@%HOSTNAME% -hostkey="%HOSTKEY%"
 
-:: Synchronize Anime
-echo Synchronizing Anime to %AnimePath%...
-"C:\Program Files (x86)\WinSCP\WinSCP.com" ^
-  /log="%LogPath%" /ini=nul ^
-  /command ^
-    "%SFTP_COMMAND%" ^
-    "synchronize local -neweronly %AnimePath% %MediaDir%/Anime" ^
-    "exit"
+:: Check if the drive letter is not DefaultDrive and synchronize Anime
+if /i not "%drive_letter%"==%DefaultDrive% (
+    if exist "%AnimePath%" (
+        echo Anime folder exists, synchronizing...
+    ) else (
+        echo Anime folder does not exist, creating folder...
+        mkdir "%AnimePath%"
+    )
+    echo Synchronizing Anime to %AnimePath%...
+    "C:\Program Files (x86)\WinSCP\WinSCP.com" ^
+        /log="%LogPath%" /ini=nul ^
+        /command ^
+            "%SFTP_COMMAND%" ^
+            "synchronize local -neweronly %AnimePath% %MediaDir%/Anime" ^
+            "exit"
+    
+    call :checkForNewCandidates "Anime"
+    echo No more Anime to sync...
+)
 
-call :checkForNewCandidates "Anime"
-echo No more Anime to sync...
+:: Synchronize TV Shows if the drive letter is not DefaultDrive
+if /i not "%drive_letter%"==%DefaultDrive% (
+    if exist "%ShowsPath%" (
+        echo TV Shows folder exists, synchronizing...
+    ) else (
+        echo TV Shows folder does not exist, creating folder...
+        mkdir "%ShowsPath%"
+    )
+    echo Synchronizing TV Shows to %ShowsPath%...
+    "C:\Program Files (x86)\WinSCP\WinSCP.com" ^
+        /log="%LogPath%" /ini=nul ^
+        /command ^
+            "%SFTP_COMMAND%" ^
+            "synchronize local -neweronly %ShowsPath% %MediaDir%/Shows" ^
+            "exit"
+    
+    call :checkForNewCandidates "Shows"
+    echo No more TV Shows to sync...
+)
 
-:: Synchronize TV Shows
-echo Synchronizing TV Shows to %ShowsPath%...
-"C:\Program Files (x86)\WinSCP\WinSCP.com" ^
-  /log="%LogPath%" /ini=nul ^
-  /command ^
-    "%SFTP_COMMAND%" ^
-    "synchronize local -neweronly %ShowsPath% %MediaDir%/Shows" ^
-    "exit"
-
-call :checkForNewCandidates "Shows"
-echo No more TV Shows to sync...
-
-:: Synchronize Movies
-echo Synchronizing Movies to %MoviesPath%...
-"C:\Program Files (x86)\WinSCP\WinSCP.com" ^
-  /log="%LogPath%" /ini=nul ^
-  /command ^
-    "%SFTP_COMMAND%" ^
-    "synchronize local -neweronly %MoviesPath% %MediaDir%/Movies" ^
-    "exit"
-
-call :checkForNewCandidates "Movies"
-echo No more Movies to sync...
+:: Synchronize Movies if the drive letter is not DefaultDrive
+if /i not "%drive_letter%"==%DefaultDrive% (
+    if exist "%MoviesPath%" (
+        echo Movies folder exists, synchronizing...
+    ) else (
+        echo Movies folder does not exist, creating folder...
+        mkdir "%MoviesPath%"
+    )
+    echo Synchronizing Movies to %MoviesPath%...
+    "C:\Program Files (x86)\WinSCP\WinSCP.com" ^
+        /log="%LogPath%" /ini=nul ^
+        /command ^
+            "%SFTP_COMMAND%" ^
+            "synchronize local -neweronly %MoviesPath% %MediaDir%/Movies" ^
+            "exit"
+    
+    call :checkForNewCandidates "Movies"
+    echo No more Movies to sync...
+)
 
 :: Check the result
 set WINSCP_RESULT=%ERRORLEVEL%
