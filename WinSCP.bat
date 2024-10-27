@@ -14,6 +14,7 @@ set USERNAME=[USERNAME]
 set PASSWORD=[PASSWORD]
 set HOSTNAME=[HOSTNAME]
 set HOSTKEY="[HOSTKEY]"
+set MediaDir="/home9/thecat007/media"
 set LogPath=E:\Jellyfin\WinSCP.log
 
 :: Prompt the user for the drive letter
@@ -44,7 +45,7 @@ echo Synchronizing Anime to %AnimePath%...
   /log="%LogPath%" /ini=nul ^
   /command ^
     "%SFTP_COMMAND%" ^
-    "synchronize local -neweronly %AnimePath% /home9/thecat007/media/Anime" ^
+    "synchronize local -neweronly %AnimePath% %MediaDir%/Anime" ^
     "exit"
 
 call :checkForNewCandidates "Anime"
@@ -56,7 +57,7 @@ echo Synchronizing TV Shows to %ShowsPath%...
   /log="%LogPath%" /ini=nul ^
   /command ^
     "%SFTP_COMMAND%" ^
-    "synchronize local -neweronly %ShowsPath% /home9/thecat007/media/Shows" ^
+    "synchronize local -neweronly %ShowsPath% %MediaDir%/Shows" ^
     "exit"
 
 call :checkForNewCandidates "Shows"
@@ -68,7 +69,7 @@ echo Synchronizing Movies to %MoviesPath%...
   /log="%LogPath%" /ini=nul ^
   /command ^
     "%SFTP_COMMAND%" ^
-    "synchronize local -neweronly %MoviesPath% /home9/thecat007/media/Movies" ^
+    "synchronize local -neweronly %MoviesPath% %MediaDir%/Movies" ^
     "exit"
 
 call :checkForNewCandidates "Movies"
@@ -98,7 +99,7 @@ echo Checking for new candidates in %mediaType%...
 "C:\Program Files (x86)\WinSCP\WinSCP.com" ^
   /command ^
     "%SFTP_COMMAND%" ^
-    "ls /home9/thecat007/media/%mediaType%" ^
+    "ls %MediaDir%/%mediaType%" ^
     "exit"
 
 echo New candidates check completed for %mediaType%.
